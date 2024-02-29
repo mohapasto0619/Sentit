@@ -1,0 +1,10 @@
+android {
+    productFlavors {
+        prp {
+            dimension "app"
+            applicationIdSuffix ".prp"
+            versionNameSuffix "-prp"
+            manifestPlaceholders = [appName: "sentit prp"]
+        }
+    }
+}

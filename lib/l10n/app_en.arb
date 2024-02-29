@@ -1,0 +1,23 @@
+{ 
+    "app": "Sent it",
+    "loginPage": "Login",
+    "registerPage": "Register",
+    "chatPage": "Chat",
+    "chatListPage": "Chat List",
+    "username": "Username",
+    "usernameHintText" : "Enter your username...",
+    "email": "Email",
+    "emailHintText": "Enter your email...",
+    "password": "Password",
+    "passwordHintText" : "Enter your password...",
+    "signin": "Sign in",
+    "toRegisterText": "No account ? register",
+    "register": "Register",
+    "inavlidCredentialsError": "Incorrect username or password.",
+    "invalidEmailError": "Invalid email, please check your email format.",
+    "weakPasswordError": "Please provide a stronger password.",
+    "emailAlreadyInUseError": "This account already existe, please sign in.",
+    "userDisabledError": "Your account was disabled, please contact support.",
+    "operationNotAllwoed": "Your account is not activated yet.",
+    "unkownError": "An unexpected error occured"
+ }

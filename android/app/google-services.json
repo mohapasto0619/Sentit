@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "312519122900",
+    "project_id": "sent-it-c0cd3",
+    "storage_bucket": "sent-it-c0cd3.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:312519122900:android:f1ceaf164bb30aadcdc041",
+        "android_client_info": {
+          "package_name": "com.meghasli.sentit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBXPn5bRs_v1OWgcIe5a1D2r7_Ek6hyTsk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,23 @@
+{ 
+    "app": "Sent it",
+    "loginPage": "Connexion",
+    "registerPage": "Inscription",
+    "chatPage": "Discussion",
+    "chatListPage": "Liste de discussions",
+    "username": "Nom d'utilisateur",
+    "usernameHintText" : "Entrez votre nom d'utilisateur...",
+    "email": "Adresse email",
+    "emailHintText": "Enter votre adresse email...",
+    "password": "Mot de passe",
+    "passwordHintText" : "Entrez votre mot de passe...",
+    "signin": "Connexion",
+    "toRegisterText": "Pas de compte ? inscrivez vous",
+    "register": "Inscription",
+    "inavlidCredentialsError": "Nom d'utilisateur ou mot de passe incorrect",
+    "invalidEmailError": "Email non valide, veuillez vérifier le format de votre email.",
+    "weakPasswordError": "Veuillez fournir un mot de passe plus fort.",
+    "emailAlreadyInUseError": "Ce compte existe déjà, veuillez vous connecter.",
+    "userDisabledError": "Votre compte a été désactivé, veuillez contacter l'assistance.",
+    "operationNotAllwoed": "Votre compte n'est pas encore activé.",
+    "unkownError": "Une erreur inattendue s'est produite" 
+ }

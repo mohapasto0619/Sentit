@@ -1,0 +1,6 @@
+#include "Release.xcconfig"
+PRODUCT_BUNDLE_IDENTIFIER=com.meghasli.prp
+FLUTTER_TARGET=lib/main_prp.dart
+FLUTTER_BUILD_NAME=prp
+APP_NAME=sentit prp
+
