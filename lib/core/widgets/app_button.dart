@@ -21,14 +21,21 @@ class AppButton extends ConsumerWidget {
     final paddings = ref.watch(paddingThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
     final textStyles = ref.watch(textThemeProvider);
+    final size = MediaQuery.of(context).size;
+    final orientation = MediaQuery.of(context).orientation;
     return ElevatedButton(
       onPressed: isActive ? onPressed : null,
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: paddings.base),
+        padding: EdgeInsets.symmetric(
+          vertical: orientation == Orientation.portrait
+              ? size.width * paddings.base
+              : size.width * paddings.sm,
+        ),
         backgroundColor: colors.primary,
         foregroundColor: colors.onPrimary,
         textStyle: textStyles.headline.withColor(
           colors.onPrimary,
+          context,
         ),
       ),
       child: Text(

@@ -43,10 +43,11 @@ class _LoginViewState extends ConsumerState<LoginView> {
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
-    final spacing = ref.watch(spacingThemeProvider);
-    final paddings = ref.watch(paddingThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
     final signInStatus = ref.watch(signInStatusProvider);
+    final paddings = ref.watch(paddingThemeProvider);
+    final spacing = ref.watch(spacingThemeProvider);
+    final size = MediaQuery.of(context).size;
 
     ref.listen(
       signInControllerProvider,
@@ -87,7 +88,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: paddings.lg,
+            horizontal: size.width * paddings.lg,
           ),
           child: Column(
             children: [
@@ -118,7 +119,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               .setUsername(value);
                         },
                       ),
-                      SizedBox(height: spacing.sm),
+                      SizedBox(height: size.height * spacing.sm),
                       AppTextInput(
                         controller: _passwordTextController,
                         title: localizations.password,
@@ -132,14 +133,14 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               .setPassword(value);
                         },
                       ),
-                      SizedBox(height: spacing.sm),
+                      SizedBox(height: size.height * spacing.sm),
                       if (signInStatus.isLoading)
                         Column(
                           children: [
                             CircularProgressIndicator(
                               color: colors.primary,
                             ),
-                            SizedBox(height: spacing.sm),
+                            SizedBox(height: size.height * spacing.sm),
                           ],
                         ),
                       if (signInStatus.alertMessage != AuthAlertMessage.none)
@@ -151,7 +152,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 localizations: localizations,
                               ),
                             ),
-                            SizedBox(height: spacing.sm),
+                            SizedBox(height: size.height * spacing.sm),
                           ],
                         ),
                       SizedBox(
@@ -167,7 +168,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           label: localizations.signin,
                         ),
                       ),
-                      SizedBox(height: spacing.sm),
+                      SizedBox(height: size.height * spacing.sm),
                       AppTextButton(
                         label: localizations.toRegisterText,
                         onPressed: () {

@@ -6,7 +6,7 @@ part of 'app_padding.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$paddingThemeHash() => r'd14168cc4022befec2e589823ed5a1b8543918be';
+String _$paddingThemeHash() => r'2dac15637a0771417d2e7f4439aea544c58acef1';
 
 /// The AppRadiusTheme of the app.
 /// It will be created directly here.

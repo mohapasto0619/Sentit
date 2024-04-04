@@ -1,4 +1,4 @@
-import 'package:flutter/painting.dart';
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sentit/core/utils/screen_size.dart';
@@ -9,12 +9,7 @@ part 'app_text_styles.freezed.dart';
 /// The textStyles theme of the app.
 @Riverpod(keepAlive: true)
 AppTextTheme textTheme(TextThemeRef ref) {
-  final screenSize = ref.watch(screenSizeProvider);
-  if (screenSize.height > WindowSize.HEIGHT_SMALL_MAX) {
-    return AppTextTheme.main();
-  } else {
-    return AppTextTheme.small();
-  }
+  return AppTextTheme.main();
 }
 
 @freezed
@@ -27,29 +22,6 @@ class AppTextTheme with _$AppTextTheme {
     required AppTextStyle body,
   }) = _AppTextTheme;
   const AppTextTheme._();
-
-  factory AppTextTheme.small() => AppTextTheme(
-        pageTitle: AppTextStyle(
-          fontSize: 19,
-          fontWeight: FontWeight.w600,
-        ),
-        headline: AppTextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-        bodyThick: AppTextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w500,
-        ),
-        bodyBase: AppTextStyle(
-          fontSize: 11,
-          fontWeight: FontWeight.w400,
-        ),
-        body: AppTextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w400,
-        ),
-      );
 
   // The default text theme
   factory AppTextTheme.main() => AppTextTheme(
@@ -91,13 +63,16 @@ class AppTextStyle {
 
   static const defaultFontFamily = '.SF Pro Text';
 
-  TextStyle withColor(Color color) => TextStyle(
-        fontFamily: fontFamily,
-        fontSize: fontSize,
-        fontWeight: fontWeight,
-        color: color,
-        letterSpacing: letterSpacing,
-      );
+  TextStyle withColor(Color color, BuildContext context) {
+    final textRatio = getScreenSize(context).textRatio;
+    return TextStyle(
+      fontFamily: fontFamily,
+      fontSize: fontSize != null ? fontSize! * textRatio : null,
+      fontWeight: fontWeight,
+      color: color,
+      letterSpacing: letterSpacing,
+    );
+  }
 }
 
 extension TextStyleExtension on TextStyle {

@@ -45,11 +45,7 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    final localizations = AppLocalizations.of(context)!;
-    final spacing = ref.watch(spacingThemeProvider);
-    final paddings = ref.watch(paddingThemeProvider);
-    final colors = ref.watch(appColorThemeProvider);
-    final signUpStatus = ref.watch(signUpStatusProvider);
+    final orientation = MediaQuery.of(context).orientation;
 
     ref.listen(
       signUpControllerProvider,
@@ -87,118 +83,322 @@ class _RegisterViewState extends ConsumerState<RegisterView> {
     );
 
     return Scaffold(
-      appBar: DefaultAppBar(
-        onPressed: () {
-          context.pop();
-        },
-      ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: paddings.lg,
-        ),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    AppLogo(
-                      label: localizations.app,
-                    ),
-                  ],
-                ),
-              ),
+      body: orientation == Orientation.portrait
+          ? RegisterViewBody(
+              usernameTextController: _usernameTextController,
+              emailTextController: _emailTextController,
+              passwordTextController: _passwordTextController,
+            )
+          : RegisterViewBodyLandscape(
+              usernameTextController: _usernameTextController,
+              emailTextController: _emailTextController,
+              passwordTextController: _passwordTextController,
             ),
-            Expanded(
-              flex: 3,
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    AppTextInput(
-                      controller: _usernameTextController,
-                      title: localizations.username,
-                      hintText: localizations.usernameHintText,
-                      isError:
-                          signUpStatus.alertMessage != AuthAlertMessage.none,
-                      onChanged: (value) {
-                        ref
-                            .read(signUpStatusProvider.notifier)
-                            .setUsername(value);
-                      },
-                    ),
-                    SizedBox(height: spacing.sm),
-                    AppTextInput(
-                      controller: _emailTextController,
-                      title: localizations.email,
-                      hintText: localizations.emailHintText,
-                      isError:
-                          signUpStatus.alertMessage != AuthAlertMessage.none,
-                      onChanged: (value) {
-                        ref.read(signUpStatusProvider.notifier).setEmail(value);
-                      },
-                    ),
-                    SizedBox(height: spacing.sm),
-                    AppTextInput(
-                      controller: _passwordTextController,
-                      title: localizations.password,
-                      hintText: localizations.passwordHintText,
-                      isTextObscure: true,
-                      isError:
-                          signUpStatus.alertMessage != AuthAlertMessage.none,
-                      onChanged: (value) {
-                        ref
-                            .read(signUpStatusProvider.notifier)
-                            .setPassword(value);
-                      },
-                    ),
-                    SizedBox(height: spacing.sm),
-                    if (signUpStatus.isLoading)
-                      Column(
+    );
+  }
+}
+
+class RegisterViewBody extends ConsumerWidget {
+  const RegisterViewBody({
+    super.key,
+    required TextEditingController usernameTextController,
+    required TextEditingController emailTextController,
+    required TextEditingController passwordTextController,
+  })  : _usernameTextController = usernameTextController,
+        _emailTextController = emailTextController,
+        _passwordTextController = passwordTextController;
+
+  final TextEditingController _usernameTextController;
+  final TextEditingController _emailTextController;
+  final TextEditingController _passwordTextController;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context)!;
+    final paddings = ref.watch(paddingThemeProvider);
+    final spacings = ref.watch(spacingThemeProvider);
+    final colors = ref.watch(appColorThemeProvider);
+    final size = MediaQuery.of(context).size;
+    final signUpStatus = ref.watch(signUpStatusProvider);
+    return SafeArea(
+      child: Column(
+        children: [
+          DefaultAppBar(
+            screenWidth: size.width,
+            onPressed: () {
+              context.pop();
+            },
+          ),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: size.width * paddings.lg,
+              ),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircularProgressIndicator(
-                            color: colors.primary,
+                          AppLogo(
+                            label: localizations.app,
                           ),
-                          SizedBox(height: spacing.sm),
                         ],
                       ),
-                    if (signUpStatus.alertMessage != AuthAlertMessage.none)
-                      Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: paddings.base),
-                        child: Column(
-                          children: [
-                            ErrorTextMessage(
-                              message:
-                                  signUpStatus.alertMessage.getErrorMessage(
-                                localizations: localizations,
+                    ),
+                  ),
+                  Expanded(
+                    flex: signUpStatus.alertMessage != AuthAlertMessage.none
+                        ? 4
+                        : 3,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          AppTextInput(
+                            controller: _usernameTextController,
+                            title: localizations.username,
+                            hintText: localizations.usernameHintText,
+                            isError: signUpStatus.alertMessage !=
+                                AuthAlertMessage.none,
+                            onChanged: (value) {
+                              ref
+                                  .read(signUpStatusProvider.notifier)
+                                  .setUsername(value);
+                            },
+                          ),
+                          SizedBox(height: size.height * spacings.sm),
+                          AppTextInput(
+                            controller: _emailTextController,
+                            title: localizations.email,
+                            hintText: localizations.emailHintText,
+                            isError: signUpStatus.alertMessage !=
+                                AuthAlertMessage.none,
+                            onChanged: (value) {
+                              ref
+                                  .read(signUpStatusProvider.notifier)
+                                  .setEmail(value);
+                            },
+                          ),
+                          SizedBox(height: size.height * spacings.sm),
+                          AppTextInput(
+                            controller: _passwordTextController,
+                            title: localizations.password,
+                            hintText: localizations.passwordHintText,
+                            isTextObscure: true,
+                            isError: signUpStatus.alertMessage !=
+                                AuthAlertMessage.none,
+                            onChanged: (value) {
+                              ref
+                                  .read(signUpStatusProvider.notifier)
+                                  .setPassword(value);
+                            },
+                          ),
+                          SizedBox(height: size.height * spacings.sm),
+                          if (signUpStatus.isLoading)
+                            Column(
+                              children: [
+                                CircularProgressIndicator(
+                                  color: colors.primary,
+                                ),
+                                SizedBox(height: size.height * spacings.sm),
+                              ],
+                            ),
+                          if (signUpStatus.alertMessage !=
+                              AuthAlertMessage.none)
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: paddings.base),
+                              child: Column(
+                                children: [
+                                  ErrorTextMessage(
+                                    message: signUpStatus.alertMessage
+                                        .getErrorMessage(
+                                      localizations: localizations,
+                                    ),
+                                  ),
+                                  SizedBox(height: size.height * spacings.sm),
+                                ],
                               ),
                             ),
-                            SizedBox(height: spacing.sm),
-                          ],
-                        ),
-                      ),
-                    SizedBox(
-                      width: double.infinity,
-                      child: AppButton(
-                        isActive: signUpStatus.isButtonActive,
-                        onPressed: () {
-                          ref.read(signUpControllerProvider.notifier).signUp(
-                                username: signUpStatus.username,
-                                email: signUpStatus.email,
-                                password: signUpStatus.password,
-                              );
-                        },
-                        label: localizations.register,
+                          SizedBox(
+                            width: double.infinity,
+                            child: AppButton(
+                              isActive: signUpStatus.isButtonActive,
+                              onPressed: () {
+                                ref
+                                    .read(signUpControllerProvider.notifier)
+                                    .signUp(
+                                      username: signUpStatus.username,
+                                      email: signUpStatus.email,
+                                      password: signUpStatus.password,
+                                    );
+                              },
+                              label: localizations.register,
+                            ),
+                          ),
+                          SizedBox(height: size.height * spacings.sm),
+                        ],
                       ),
                     ),
-                    SizedBox(height: spacing.sm),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class RegisterViewBodyLandscape extends ConsumerWidget {
+  const RegisterViewBodyLandscape({
+    super.key,
+    required TextEditingController usernameTextController,
+    required TextEditingController emailTextController,
+    required TextEditingController passwordTextController,
+  })  : _usernameTextController = usernameTextController,
+        _emailTextController = emailTextController,
+        _passwordTextController = passwordTextController;
+
+  final TextEditingController _usernameTextController;
+  final TextEditingController _emailTextController;
+  final TextEditingController _passwordTextController;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final localizations = AppLocalizations.of(context)!;
+    final paddings = ref.watch(paddingThemeProvider);
+    final spacings = ref.watch(spacingThemeProvider);
+    final colors = ref.watch(appColorThemeProvider);
+    final size = MediaQuery.of(context).size;
+    final signUpStatus = ref.watch(signUpStatusProvider);
+    return SafeArea(
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                DefaultAppBar(
+                  screenWidth: size.width,
+                  onPressed: () {
+                    context.pop();
+                  },
+                ),
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      left: size.width * paddings.xl,
+                    ),
+                    child: Center(
+                      child: Expanded(
+                        child: SingleChildScrollView(
+                          child: Column(
+                            children: [
+                              AppTextInput(
+                                controller: _usernameTextController,
+                                title: localizations.username,
+                                hintText: localizations.usernameHintText,
+                                isError: signUpStatus.alertMessage !=
+                                    AuthAlertMessage.none,
+                                onChanged: (value) {
+                                  ref
+                                      .read(signUpStatusProvider.notifier)
+                                      .setUsername(value);
+                                },
+                              ),
+                              SizedBox(height: size.height * spacings.small),
+                              AppTextInput(
+                                controller: _emailTextController,
+                                title: localizations.email,
+                                hintText: localizations.emailHintText,
+                                isError: signUpStatus.alertMessage !=
+                                    AuthAlertMessage.none,
+                                onChanged: (value) {
+                                  ref
+                                      .read(signUpStatusProvider.notifier)
+                                      .setEmail(value);
+                                },
+                              ),
+                              SizedBox(height: size.height * spacings.small),
+                              AppTextInput(
+                                controller: _passwordTextController,
+                                title: localizations.password,
+                                hintText: localizations.passwordHintText,
+                                isTextObscure: true,
+                                isError: signUpStatus.alertMessage !=
+                                    AuthAlertMessage.none,
+                                onChanged: (value) {
+                                  ref
+                                      .read(signUpStatusProvider.notifier)
+                                      .setPassword(value);
+                                },
+                              ),
+                              SizedBox(height: size.height * spacings.small),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding:
+                  EdgeInsets.symmetric(horizontal: size.width * paddings.lg),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  AppLogo(
+                    label: localizations.app,
+                  ),
+                  SizedBox(height: size.height * spacings.medium),
+                  if (signUpStatus.isLoading)
+                    Column(
+                      children: [
+                        CircularProgressIndicator(
+                          color: colors.primary,
+                        ),
+                        SizedBox(height: size.height * spacings.medium),
+                      ],
+                    ),
+                  if (signUpStatus.alertMessage != AuthAlertMessage.none)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: paddings.base),
+                      child: Column(
+                        children: [
+                          ErrorTextMessage(
+                            message: signUpStatus.alertMessage.getErrorMessage(
+                              localizations: localizations,
+                            ),
+                          ),
+                          SizedBox(height: size.height * spacings.medium),
+                        ],
+                      ),
+                    ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: AppButton(
+                      isActive: signUpStatus.isButtonActive,
+                      onPressed: () {
+                        ref.read(signUpControllerProvider.notifier).signUp(
+                              username: signUpStatus.username,
+                              email: signUpStatus.email,
+                              password: signUpStatus.password,
+                            );
+                      },
+                      label: localizations.register,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

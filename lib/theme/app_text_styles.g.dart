@@ -6,7 +6,7 @@ part of 'app_text_styles.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$textThemeHash() => r'23df1f13e2a94552b2941d05bd031389a010d10a';
+String _$textThemeHash() => r'723827d059d9ab577548fa8c9371cfd02d0aa707';
 
 /// The textStyles theme of the app.
 ///

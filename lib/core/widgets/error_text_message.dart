@@ -21,7 +21,10 @@ class ErrorTextMessage extends ConsumerWidget {
         Flexible(
           child: Text(
             message,
-            style: textStyles.bodyBase.withColor(colors.error),
+            style: textStyles.body.withColor(
+              colors.error,
+              context,
+            ),
           ),
         ),
       ],

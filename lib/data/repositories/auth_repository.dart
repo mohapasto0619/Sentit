@@ -46,6 +46,10 @@ class AuthRepository {
     return true;
   }
 
+  Future<bool> signOut() async {
+    return authService.signOut();
+  }
+
   String? getUserId() {
     return authService.getUserId();
   }

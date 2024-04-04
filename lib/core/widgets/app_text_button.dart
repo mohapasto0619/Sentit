@@ -24,6 +24,7 @@ class AppTextButton extends ConsumerWidget {
         style: textStyles.bodyBase
             .withColor(
               colors.primary,
+              context,
             )
             .copyWith(
               decoration: TextDecoration.underline,

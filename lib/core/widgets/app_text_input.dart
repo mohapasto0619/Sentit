@@ -25,20 +25,30 @@ class AppTextInput extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final radius = ref.watch(radiusThemeProvider);
     final paddings = ref.watch(paddingThemeProvider);
+    final radius = ref.watch(radiusThemeProvider);
     final textStyles = ref.watch(textThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
+    final size = MediaQuery.of(context).size;
+    final orientation = MediaQuery.of(context).orientation;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (title != null)
           Padding(
-            padding: EdgeInsets.only(left: paddings.sm, bottom: paddings.sm),
+            padding: EdgeInsets.only(
+              left: orientation == Orientation.portrait
+                  ? size.width * paddings.sm
+                  : size.width * paddings.xs,
+              bottom: orientation == Orientation.portrait
+                  ? size.width * paddings.sm
+                  : size.width * paddings.xs,
+            ),
             child: Text(
               title!,
               style: textStyles.bodyBase.withColor(
                 isError ? colors.error : colors.primary,
+                context,
               ),
             ),
           ),
@@ -47,16 +57,22 @@ class AppTextInput extends ConsumerWidget {
           onChanged: onChanged,
           style: textStyles.body.withColor(
             colors.primary,
+            context,
           ),
           obscureText: isTextObscure,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
-              vertical: paddings.base,
-              horizontal: paddings.base,
+              vertical: orientation == Orientation.portrait
+                  ? size.width * paddings.base
+                  : size.width * paddings.sm,
+              horizontal: orientation == Orientation.portrait
+                  ? size.width * paddings.base
+                  : size.width * paddings.sm,
             ),
             hintText: hintText,
             hintStyle: textStyles.bodyBase.withColor(
               colors.colorGrey400,
+              context,
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(

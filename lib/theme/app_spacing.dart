@@ -1,6 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:sentit/core/utils/screen_size.dart';
 
 part 'app_spacing.g.dart';
 part 'app_spacing.freezed.dart';
@@ -9,12 +8,7 @@ part 'app_spacing.freezed.dart';
 /// It will be created directly here.
 @Riverpod(keepAlive: true)
 AppSpacingTheme spacingTheme(SpacingThemeRef ref) {
-  final screenSize = ref.watch(screenSizeProvider);
-  if (screenSize.height > WindowSize.HEIGHT_SMALL_MAX) {
-    return AppSpacingTheme.small();
-  } else {
-    return AppSpacingTheme.extraSmall();
-  }
+  return AppSpacingTheme.regular();
 }
 
 @freezed
@@ -33,31 +27,17 @@ class AppSpacingTheme with _$AppSpacingTheme {
     required double xxxxl,
   }) = _AppSpacingTheme;
 
-  factory AppSpacingTheme.extraSmall() => const AppSpacingTheme(
-        xxs: 2,
-        xs: 4,
-        ms: 8,
-        small: 12,
-        sm: 16,
-        medium: 20,
-        large: 24,
-        xl: 28,
-        xxl: 32,
-        xxxl: 36,
-        xxxxl: 40,
-      );
-
-  factory AppSpacingTheme.small() => const AppSpacingTheme(
-        xxs: 4,
-        xs: 8,
-        ms: 16,
-        small: 24,
-        sm: 32,
-        medium: 40,
-        large: 48,
-        xl: 56,
-        xxl: 64,
-        xxxl: 72,
-        xxxxl: 80,
+  factory AppSpacingTheme.regular() => const AppSpacingTheme(
+        xxs: 0.005,
+        xs: 0.01,
+        ms: 0.02,
+        small: 0.03,
+        sm: 0.04,
+        medium: 0.045,
+        large: 0.055,
+        xl: 0.065,
+        xxl: 0.075,
+        xxxl: 0.08,
+        xxxxl: 0.09,
       );
 }

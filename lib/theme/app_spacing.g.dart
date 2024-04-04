@@ -6,7 +6,7 @@ part of 'app_spacing.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$spacingThemeHash() => r'01d6f698f3ec443bd36e4d1fc5b505e271cfdb87';
+String _$spacingThemeHash() => r'61863261facd32123971c590e7684aeb28476628';
 
 /// The AppRadiusTheme of the app.
 /// It will be created directly here.

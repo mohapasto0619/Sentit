@@ -6,7 +6,7 @@ part of 'app_icon_sizes.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appIconSizesHash() => r'7908d1de181f865ba199607bb582c8f0a0299ec7';
+String _$appIconSizesHash() => r'fda12cd28a0175d33b3acad1be33581ae7d69bf6';
 
 /// The AppIconSizes of the app.
 /// It will be created directly here.

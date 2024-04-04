@@ -19,12 +19,9 @@ class AddUserView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final paddings = ref.watch(paddingThemeProvider);
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
-      appBar: DefaultAppBar(
-        onPressed: () {
-          context.pop();
-        },
-      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -117,7 +114,10 @@ class UserCard extends ConsumerWidget {
               ),
               Text(
                 username,
-                style: textStyles.headline.withColor(colors.primary),
+                style: textStyles.headline.withColor(
+                  colors.primary,
+                  context,
+                ),
               )
             ],
           ),

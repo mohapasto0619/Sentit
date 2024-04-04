@@ -53,6 +53,11 @@ class AuthService {
     return userCredential;
   }
 
+  Future<bool> signOut() async {
+    await firebaseAuth.signOut();
+    return true;
+  }
+
   String? getUserId() {
     return firebaseAuth.currentUser?.uid;
   }

@@ -10,11 +10,24 @@ Stream<QuerySnapshot> chatList(ChatListRef ref) async* {
   final messageRepository = ref.watch(messageRepositoryProvider);
   final authrepository = ref.watch(authRepositoryProvider);
   final userUid = authrepository.getUserId();
-  print('user uid : $userUid');
   yield* messageRepository.getUsers().where(
         (data) => data.docs.any((user) {
-          print(user['uid']);
           return user['uid'] != userUid;
         }),
       );
+}
+
+@Riverpod(keepAlive: false)
+class SignOutController extends _$SignOutController {
+  @override
+  FutureOr<bool> build() {
+    return false;
+  }
+
+  Future<void> signOut() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(
+      () => ref.read(authRepositoryProvider).signOut(),
+    );
+  }
 }
