@@ -24,26 +24,34 @@ class ChatAppBar extends ConsumerWidget {
     final spacings = ref.watch(spacingThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
     final textStyle = ref.watch(textThemeProvider);
-    final size = MediaQuery.of(context).size;
     final screenCategory = getScreenSize(context);
+    final orientation = MediaQuery.of(context).orientation;
     return Row(
       children: [
         IconButton(
           color: colors.primary,
           onPressed: onPressed,
           padding: EdgeInsets.only(
-            left: size.width * paddings.sm,
-            top: size.width * paddings.sm,
+            left: orientation == Orientation.portrait
+                ? paddings.sm.onScreenWidth(context)
+                : paddings.xs.onScreenWidth(context),
+            top: orientation == Orientation.portrait
+                ? paddings.sm.onScreenWidth(context)
+                : paddings.xs.onScreenWidth(context),
           ),
           icon: Icon(
             Icons.arrow_back_ios_new_rounded,
-            size: screenCategory.size >= ScreenSize.large.size
-                ? size.width * iconSizes.mini
-                : size.width * iconSizes.small,
+            size: orientation == Orientation.portrait
+                ? screenCategory.size >= ScreenSize.large.size
+                    ? iconSizes.mini.onScreenWidth(context)
+                    : iconSizes.small.onScreenWidth(context)
+                : screenCategory.size >= ScreenSize.large.size
+                    ? iconSizes.micro.onScreenWidth(context)
+                    : iconSizes.mini.onScreenWidth(context),
           ),
         ),
         SizedBox(
-          width: size.width * spacings.large,
+          width: spacings.large.onScreenWidth(context),
         ),
         Text(
           title,

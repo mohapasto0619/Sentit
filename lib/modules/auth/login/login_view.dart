@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sentit/core/utils/screen_size.dart';
 import 'package:sentit/core/widgets/app_button.dart';
 import 'package:sentit/core/widgets/app_logo_text.dart';
 import 'package:sentit/core/widgets/app_text_button.dart';
@@ -47,7 +48,6 @@ class _LoginViewState extends ConsumerState<LoginView> {
     final signInStatus = ref.watch(signInStatusProvider);
     final paddings = ref.watch(paddingThemeProvider);
     final spacing = ref.watch(spacingThemeProvider);
-    final size = MediaQuery.of(context).size;
 
     ref.listen(
       signInControllerProvider,
@@ -88,7 +88,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(
-            horizontal: size.width * paddings.lg,
+            horizontal: paddings.lg.onScreenWidth(context),
           ),
           child: Column(
             children: [
@@ -119,7 +119,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               .setUsername(value);
                         },
                       ),
-                      SizedBox(height: size.height * spacing.sm),
+                      SizedBox(height: spacing.sm.onScreenHeight(context)),
                       AppTextInput(
                         controller: _passwordTextController,
                         title: localizations.password,
@@ -133,14 +133,15 @@ class _LoginViewState extends ConsumerState<LoginView> {
                               .setPassword(value);
                         },
                       ),
-                      SizedBox(height: size.height * spacing.sm),
+                      SizedBox(height: spacing.sm.onScreenHeight(context)),
                       if (signInStatus.isLoading)
                         Column(
                           children: [
                             CircularProgressIndicator(
                               color: colors.primary,
                             ),
-                            SizedBox(height: size.height * spacing.sm),
+                            SizedBox(
+                                height: spacing.sm.onScreenHeight(context)),
                           ],
                         ),
                       if (signInStatus.alertMessage != AuthAlertMessage.none)
@@ -152,7 +153,8 @@ class _LoginViewState extends ConsumerState<LoginView> {
                                 localizations: localizations,
                               ),
                             ),
-                            SizedBox(height: size.height * spacing.sm),
+                            SizedBox(
+                                height: spacing.sm.onScreenHeight(context)),
                           ],
                         ),
                       SizedBox(
@@ -168,7 +170,7 @@ class _LoginViewState extends ConsumerState<LoginView> {
                           label: localizations.signin,
                         ),
                       ),
-                      SizedBox(height: size.height * spacing.sm),
+                      SizedBox(height: spacing.sm.onScreenHeight(context)),
                       AppTextButton(
                         label: localizations.toRegisterText,
                         onPressed: () {

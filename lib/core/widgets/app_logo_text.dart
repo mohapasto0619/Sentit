@@ -20,7 +20,6 @@ class AppLogo extends ConsumerWidget {
     final colors = ref.watch(appColorThemeProvider);
     final textStyles = ref.watch(textThemeProvider);
     final iconSizes = ref.watch(appIconSizesProvider);
-    final size = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
     final screenCategory = getScreenSize(context);
     return orientation == Orientation.portrait
@@ -31,14 +30,14 @@ class AppLogo extends ConsumerWidget {
                 AppIcons.appIcon,
                 height: screenCategory.size >= ScreenSize.large.size
                     ? orientation == Orientation.portrait
-                        ? size.width * iconSizes.large
-                        : size.width * iconSizes.medium
+                        ? iconSizes.large.onScreenWidth(context)
+                        : iconSizes.medium.onScreenWidth(context)
                     : orientation == Orientation.portrait
-                        ? size.width * iconSizes.xl
-                        : size.width * iconSizes.small,
+                        ? iconSizes.xl.onScreenWidth(context)
+                        : iconSizes.small.onScreenWidth(context),
                 width: screenCategory.size >= ScreenSize.large.size
-                    ? size.width * iconSizes.large
-                    : size.width * iconSizes.xl,
+                    ? iconSizes.large.onScreenWidth(context)
+                    : iconSizes.xl.onScreenWidth(context),
               ),
               Text(
                 label,
@@ -56,14 +55,14 @@ class AppLogo extends ConsumerWidget {
                 AppIcons.appIcon,
                 height: screenCategory.size >= ScreenSize.large.size
                     ? orientation == Orientation.portrait
-                        ? size.width * iconSizes.large
-                        : size.width * iconSizes.medium
+                        ? iconSizes.large.onScreenWidth(context)
+                        : iconSizes.medium.onScreenWidth(context)
                     : orientation == Orientation.portrait
-                        ? size.width * iconSizes.xl
-                        : size.width * iconSizes.small,
+                        ? iconSizes.xl.onScreenWidth(context)
+                        : iconSizes.small.onScreenWidth(context),
                 width: screenCategory.size >= ScreenSize.large.size
-                    ? size.width * iconSizes.large
-                    : size.width * iconSizes.xl,
+                    ? iconSizes.large.onScreenWidth(context)
+                    : iconSizes.xl.onScreenWidth(context),
               ),
               Text(
                 label,

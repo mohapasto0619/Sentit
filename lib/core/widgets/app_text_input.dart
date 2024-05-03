@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sentit/core/utils/screen_size.dart';
 import 'package:sentit/theme/app_colors.dart';
 import 'package:sentit/theme/app_padding.dart';
 import 'package:sentit/theme/app_radius.dart';
@@ -29,7 +30,6 @@ class AppTextInput extends ConsumerWidget {
     final radius = ref.watch(radiusThemeProvider);
     final textStyles = ref.watch(textThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
-    final size = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,11 +38,11 @@ class AppTextInput extends ConsumerWidget {
           Padding(
             padding: EdgeInsets.only(
               left: orientation == Orientation.portrait
-                  ? size.width * paddings.sm
-                  : size.width * paddings.xs,
+                  ? paddings.sm.onScreenWidth(context)
+                  : paddings.xs.onScreenWidth(context),
               bottom: orientation == Orientation.portrait
-                  ? size.width * paddings.sm
-                  : size.width * paddings.xs,
+                  ? paddings.sm.onScreenWidth(context)
+                  : paddings.xs.onScreenWidth(context),
             ),
             child: Text(
               title!,
@@ -63,11 +63,11 @@ class AppTextInput extends ConsumerWidget {
           decoration: InputDecoration(
             contentPadding: EdgeInsets.symmetric(
               vertical: orientation == Orientation.portrait
-                  ? size.width * paddings.base
-                  : size.width * paddings.sm,
+                  ? paddings.base.onScreenWidth(context)
+                  : paddings.sm.onScreenWidth(context),
               horizontal: orientation == Orientation.portrait
-                  ? size.width * paddings.base
-                  : size.width * paddings.sm,
+                  ? paddings.base.onScreenWidth(context)
+                  : paddings.sm.onScreenWidth(context),
             ),
             hintText: hintText,
             hintStyle: textStyles.bodyBase.withColor(

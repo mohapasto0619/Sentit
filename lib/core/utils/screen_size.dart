@@ -34,3 +34,15 @@ ScreenSize getScreenSize(BuildContext context) {
   }
   return ScreenSize.extraSmall;
 }
+
+extension ScreenSizeExtension on double {
+  double onScreenHeight(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return this * height;
+  }
+
+  double onScreenWidth(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    return this * width;
+  }
+}

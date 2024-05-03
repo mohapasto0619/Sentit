@@ -25,8 +25,9 @@ class AppSearchBar extends ConsumerWidget {
     final iconSizes = ref.watch(appIconSizesProvider);
     final textStyles = ref.watch(textThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
-    final size = MediaQuery.of(context).size;
     final screenCategory = getScreenSize(context);
+    final orientation = MediaQuery.of(context).orientation;
+
     return TextField(
       controller: controller,
       onChanged: onChanged,
@@ -37,16 +38,20 @@ class AppSearchBar extends ConsumerWidget {
       decoration: InputDecoration(
         contentPadding: EdgeInsets.symmetric(
           vertical: screenCategory.size >= ScreenSize.large.size
-              ? size.width * paddings.sm
-              : size.width * paddings.base,
-          horizontal: size.width * paddings.base,
+              ? paddings.sm.onScreenWidth(context)
+              : paddings.base.onScreenWidth(context),
+          horizontal: paddings.base.onScreenWidth(context),
         ),
         suffixIcon: Icon(
           Icons.search,
           color: colors.primary,
-          size: screenCategory.size >= ScreenSize.large.size
-              ? size.width * iconSizes.mini
-              : size.width * iconSizes.tiny,
+          size: orientation == Orientation.portrait
+              ? screenCategory.size >= ScreenSize.large.size
+                  ? iconSizes.mini.onScreenWidth(context)
+                  : iconSizes.tiny.onScreenWidth(context)
+              : screenCategory.size >= ScreenSize.large.size
+                  ? iconSizes.micro.onScreenWidth(context)
+                  : iconSizes.mini.onScreenWidth(context),
         ),
         hintText: hintText,
         hintStyle: textStyles.bodyBase.withColor(

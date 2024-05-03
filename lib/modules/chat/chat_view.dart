@@ -42,14 +42,13 @@ class _ChatViewState extends ConsumerState<ChatView> {
     final localizations = AppLocalizations.of(context)!;
     final inputMessage = ref.watch(inputMessageProvider);
     final paddings = ref.watch(paddingThemeProvider);
-    final size = MediaQuery.of(context).size;
     return Scaffold(
       body: SafeArea(
         child: Column(
           children: [
             Padding(
               padding: EdgeInsets.all(
-                size.width * paddings.sm,
+                paddings.sm.onScreenWidth(context),
               ),
               child: ChatAppBar(
                 title: widget.receiverUsername,
@@ -156,11 +155,13 @@ class MessageView extends ConsumerWidget {
     final textStyles = ref.watch(textThemeProvider);
     final paddings = ref.watch(paddingThemeProvider);
     final radius = ref.watch(radiusThemeProvider);
-    final size = MediaQuery.of(context).size;
     final screenCategory = getScreenSize(context);
+    final orientation = MediaQuery.of(context).orientation;
     return Padding(
       padding: EdgeInsets.all(
-        size.width * paddings.xs,
+        orientation == Orientation.portrait
+            ? paddings.xs.onScreenWidth(context)
+            : paddings.xxs.onScreenWidth(context),
       ),
       child: Row(
         mainAxisAlignment: (message['senderId'] == userId)
@@ -170,8 +171,8 @@ class MessageView extends ConsumerWidget {
           Flexible(
             child: Padding(
               padding: (message['senderId'] == userId)
-                  ? EdgeInsets.only(left: size.width * paddings.xl)
-                  : EdgeInsets.only(right: size.width * paddings.xl),
+                  ? EdgeInsets.only(left: paddings.xl.onScreenWidth(context))
+                  : EdgeInsets.only(right: paddings.xl.onScreenWidth(context)),
               child: Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.all(Radius.circular(radius.base)),
@@ -182,8 +183,8 @@ class MessageView extends ConsumerWidget {
                 child: Padding(
                   padding: EdgeInsets.all(
                     screenCategory.size >= ScreenSize.large.size
-                        ? size.width * paddings.sm
-                        : size.width * paddings.base,
+                        ? paddings.sm.onScreenWidth(context)
+                        : paddings.base.onScreenWidth(context),
                   ),
                   child: Text(
                     message['message'],
@@ -223,10 +224,12 @@ class MessageInputView extends ConsumerWidget {
     final textStyles = ref.watch(textThemeProvider);
     final iconSizes = ref.watch(appIconSizesProvider);
     final colors = ref.watch(appColorThemeProvider);
-    final size = MediaQuery.of(context).size;
     final screenCategory = getScreenSize(context);
+    final orientation = MediaQuery.of(context).orientation;
     return Padding(
-      padding: EdgeInsets.all(size.width * paddings.sm),
+      padding: EdgeInsets.all(orientation == Orientation.portrait
+          ? paddings.sm.onScreenWidth(context)
+          : paddings.xs.onScreenWidth(context)),
       child: Row(
         children: [
           Expanded(
@@ -239,12 +242,16 @@ class MessageInputView extends ConsumerWidget {
               ),
               decoration: InputDecoration(
                 contentPadding: EdgeInsets.symmetric(
-                  vertical: screenCategory.size >= ScreenSize.large.size
-                      ? size.width * paddings.sm
-                      : size.width * paddings.base,
+                  vertical: orientation == Orientation.portrait
+                      ? screenCategory.size >= ScreenSize.large.size
+                          ? paddings.sm.onScreenWidth(context)
+                          : paddings.base.onScreenWidth(context)
+                      : screenCategory.size >= ScreenSize.large.size
+                          ? paddings.xs.onScreenWidth(context)
+                          : paddings.sm.onScreenWidth(context),
                   horizontal: screenCategory.size >= ScreenSize.large.size
-                      ? size.width * paddings.sm
-                      : size.width * paddings.base,
+                      ? paddings.sm.onScreenWidth(context)
+                      : paddings.base.onScreenWidth(context),
                 ),
                 hintText: hintText,
                 hintStyle: textStyles.bodyBase.withColor(
@@ -277,9 +284,13 @@ class MessageInputView extends ConsumerWidget {
             icon: Icon(
               Icons.send,
               color: colors.primary,
-              size: screenCategory.size >= ScreenSize.large.size
-                  ? size.width * iconSizes.mini
-                  : size.width * iconSizes.small,
+              size: orientation == Orientation.portrait
+                  ? screenCategory.size >= ScreenSize.large.size
+                      ? iconSizes.mini.onScreenWidth(context)
+                      : iconSizes.small.onScreenWidth(context)
+                  : screenCategory.size >= ScreenSize.large.size
+                      ? iconSizes.micro.onScreenWidth(context)
+                      : iconSizes.mini.onScreenWidth(context),
             ),
           )
         ],

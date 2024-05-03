@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sentit/core/utils/screen_size.dart';
 import 'package:sentit/core/widgets/app_button.dart';
 import 'package:sentit/core/widgets/app_logo_text.dart';
 import 'package:sentit/core/widgets/app_text_input.dart';
@@ -118,13 +119,11 @@ class RegisterViewBody extends ConsumerWidget {
     final paddings = ref.watch(paddingThemeProvider);
     final spacings = ref.watch(spacingThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
-    final size = MediaQuery.of(context).size;
     final signUpStatus = ref.watch(signUpStatusProvider);
     return SafeArea(
       child: Column(
         children: [
           DefaultAppBar(
-            screenWidth: size.width,
             onPressed: () {
               context.pop();
             },
@@ -132,7 +131,7 @@ class RegisterViewBody extends ConsumerWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(
-                horizontal: size.width * paddings.lg,
+                horizontal: paddings.lg.onScreenWidth(context),
               ),
               child: Column(
                 children: [
@@ -167,7 +166,7 @@ class RegisterViewBody extends ConsumerWidget {
                                   .setUsername(value);
                             },
                           ),
-                          SizedBox(height: size.height * spacings.sm),
+                          SizedBox(height: spacings.sm.onScreenHeight(context)),
                           AppTextInput(
                             controller: _emailTextController,
                             title: localizations.email,
@@ -180,7 +179,7 @@ class RegisterViewBody extends ConsumerWidget {
                                   .setEmail(value);
                             },
                           ),
-                          SizedBox(height: size.height * spacings.sm),
+                          SizedBox(height: spacings.sm.onScreenHeight(context)),
                           AppTextInput(
                             controller: _passwordTextController,
                             title: localizations.password,
@@ -194,14 +193,16 @@ class RegisterViewBody extends ConsumerWidget {
                                   .setPassword(value);
                             },
                           ),
-                          SizedBox(height: size.height * spacings.sm),
+                          SizedBox(height: spacings.sm.onScreenHeight(context)),
                           if (signUpStatus.isLoading)
                             Column(
                               children: [
                                 CircularProgressIndicator(
                                   color: colors.primary,
                                 ),
-                                SizedBox(height: size.height * spacings.sm),
+                                SizedBox(
+                                    height:
+                                        spacings.sm.onScreenHeight(context)),
                               ],
                             ),
                           if (signUpStatus.alertMessage !=
@@ -217,7 +218,9 @@ class RegisterViewBody extends ConsumerWidget {
                                       localizations: localizations,
                                     ),
                                   ),
-                                  SizedBox(height: size.height * spacings.sm),
+                                  SizedBox(
+                                      height:
+                                          spacings.sm.onScreenHeight(context)),
                                 ],
                               ),
                             ),
@@ -237,7 +240,7 @@ class RegisterViewBody extends ConsumerWidget {
                               label: localizations.register,
                             ),
                           ),
-                          SizedBox(height: size.height * spacings.sm),
+                          SizedBox(height: spacings.sm.onScreenHeight(context)),
                         ],
                       ),
                     ),
@@ -272,7 +275,6 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
     final paddings = ref.watch(paddingThemeProvider);
     final spacings = ref.watch(spacingThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
-    final size = MediaQuery.of(context).size;
     final signUpStatus = ref.watch(signUpStatusProvider);
     return SafeArea(
       child: Row(
@@ -281,7 +283,6 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
             child: Column(
               children: [
                 DefaultAppBar(
-                  screenWidth: size.width,
                   onPressed: () {
                     context.pop();
                   },
@@ -289,7 +290,7 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
                 Expanded(
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left: size.width * paddings.xl,
+                      left: paddings.xl.onScreenWidth(context),
                     ),
                     child: Center(
                       child: Expanded(
@@ -308,7 +309,9 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
                                       .setUsername(value);
                                 },
                               ),
-                              SizedBox(height: size.height * spacings.small),
+                              SizedBox(
+                                  height:
+                                      spacings.small.onScreenHeight(context)),
                               AppTextInput(
                                 controller: _emailTextController,
                                 title: localizations.email,
@@ -321,7 +324,9 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
                                       .setEmail(value);
                                 },
                               ),
-                              SizedBox(height: size.height * spacings.small),
+                              SizedBox(
+                                  height:
+                                      spacings.small.onScreenHeight(context)),
                               AppTextInput(
                                 controller: _passwordTextController,
                                 title: localizations.password,
@@ -335,7 +340,25 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
                                       .setPassword(value);
                                 },
                               ),
-                              SizedBox(height: size.height * spacings.small),
+                              SizedBox(
+                                  height:
+                                      spacings.large.onScreenHeight(context)),
+                              SizedBox(
+                                width: double.infinity,
+                                child: AppButton(
+                                  isActive: signUpStatus.isButtonActive,
+                                  onPressed: () {
+                                    ref
+                                        .read(signUpControllerProvider.notifier)
+                                        .signUp(
+                                          username: signUpStatus.username,
+                                          email: signUpStatus.email,
+                                          password: signUpStatus.password,
+                                        );
+                                  },
+                                  label: localizations.register,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -348,22 +371,23 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
           ),
           Expanded(
             child: Padding(
-              padding:
-                  EdgeInsets.symmetric(horizontal: size.width * paddings.lg),
+              padding: EdgeInsets.symmetric(
+                  horizontal: paddings.lg.onScreenWidth(context)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AppLogo(
                     label: localizations.app,
                   ),
-                  SizedBox(height: size.height * spacings.medium),
+                  SizedBox(height: spacings.medium.onScreenHeight(context)),
                   if (signUpStatus.isLoading)
                     Column(
                       children: [
                         CircularProgressIndicator(
                           color: colors.primary,
                         ),
-                        SizedBox(height: size.height * spacings.medium),
+                        SizedBox(
+                            height: spacings.medium.onScreenHeight(context)),
                       ],
                     ),
                   if (signUpStatus.alertMessage != AuthAlertMessage.none)
@@ -376,24 +400,11 @@ class RegisterViewBodyLandscape extends ConsumerWidget {
                               localizations: localizations,
                             ),
                           ),
-                          SizedBox(height: size.height * spacings.medium),
+                          SizedBox(
+                              height: spacings.medium.onScreenHeight(context)),
                         ],
                       ),
                     ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: AppButton(
-                      isActive: signUpStatus.isButtonActive,
-                      onPressed: () {
-                        ref.read(signUpControllerProvider.notifier).signUp(
-                              username: signUpStatus.username,
-                              email: signUpStatus.email,
-                              password: signUpStatus.password,
-                            );
-                      },
-                      label: localizations.register,
-                    ),
-                  ),
                 ],
               ),
             ),

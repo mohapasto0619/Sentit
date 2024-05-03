@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sentit/core/utils/screen_size.dart';
 import 'package:sentit/theme/app_colors.dart';
 import 'package:sentit/theme/app_padding.dart';
 import 'package:sentit/theme/app_text_styles.dart';
@@ -21,15 +22,14 @@ class AppButton extends ConsumerWidget {
     final paddings = ref.watch(paddingThemeProvider);
     final colors = ref.watch(appColorThemeProvider);
     final textStyles = ref.watch(textThemeProvider);
-    final size = MediaQuery.of(context).size;
     final orientation = MediaQuery.of(context).orientation;
     return ElevatedButton(
       onPressed: isActive ? onPressed : null,
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(
           vertical: orientation == Orientation.portrait
-              ? size.width * paddings.base
-              : size.width * paddings.sm,
+              ? paddings.base.onScreenWidth(context)
+              : paddings.sm.onScreenWidth(context),
         ),
         backgroundColor: colors.primary,
         foregroundColor: colors.onPrimary,

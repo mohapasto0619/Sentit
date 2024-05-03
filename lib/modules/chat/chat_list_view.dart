@@ -19,12 +19,7 @@ class ChatListView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final localizations = AppLocalizations.of(context)!;
-    final paddings = ref.watch(paddingThemeProvider);
-    final iconSizes = ref.watch(appIconSizesProvider);
-    final size = MediaQuery.of(context).size;
-    final colors = ref.watch(appColorThemeProvider);
-    final screenCategory = getScreenSize(context);
+    final orientation = MediaQuery.of(context).orientation;
 
     ref.listen(
       signOutControllerProvider,
@@ -44,46 +39,113 @@ class ChatListView extends ConsumerWidget {
     return Scaffold(
       floatingActionButton: AddUserButton(
         onPressed: () {
-          context.pushNamed(AppRoute.addUser.name);
+          //context.pushNamed(AppRoute.addUser.name);
         },
       ),
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.all(
-                size.width * paddings.sm,
-              ),
-              child: Row(
-                children: [
-                  const Flexible(
-                    child: AppSearchBar(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: size.width * paddings.xs),
-                    child: IconButton(
-                      onPressed: () {
-                        ref.read(signOutControllerProvider.notifier).signOut();
-                      },
-                      color: colors.primary,
-                      icon: Icon(
-                        Icons.logout,
-                        size: screenCategory.size >= ScreenSize.large.size
-                            ? size.width * iconSizes.mini
-                            : size.width * iconSizes.small,
-                      ),
+      body: orientation == Orientation.portrait
+          ? const ChatListBody()
+          : const ChatListBodyLandscape(),
+    );
+  }
+}
+
+class ChatListBody extends ConsumerWidget {
+  const ChatListBody({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddings = ref.watch(paddingThemeProvider);
+    final iconSizes = ref.watch(appIconSizesProvider);
+    final colors = ref.watch(appColorThemeProvider);
+    final screenCategory = getScreenSize(context);
+
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(
+              paddings.sm.onScreenWidth(context),
+            ),
+            child: Row(
+              children: [
+                const Flexible(
+                  child: AppSearchBar(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: paddings.xs.onScreenWidth(context)),
+                  child: IconButton(
+                    onPressed: () {
+                      ref.read(signOutControllerProvider.notifier).signOut();
+                    },
+                    color: colors.primary,
+                    icon: Icon(
+                      Icons.logout,
+                      size: screenCategory.size >= ScreenSize.large.size
+                          ? iconSizes.mini.onScreenWidth(context)
+                          : iconSizes.small.onScreenWidth(context),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            const Expanded(
-              child: UserListsView(),
+          ),
+          const Expanded(
+            child: UserListsView(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ChatListBodyLandscape extends ConsumerWidget {
+  const ChatListBodyLandscape({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddings = ref.watch(paddingThemeProvider);
+    final iconSizes = ref.watch(appIconSizesProvider);
+    final colors = ref.watch(appColorThemeProvider);
+    final screenCategory = getScreenSize(context);
+
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.all(
+              paddings.xs.onScreenWidth(context),
             ),
-          ],
-        ),
+            child: Row(
+              children: [
+                const Flexible(
+                  child: AppSearchBar(),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: paddings.xs.onScreenWidth(context)),
+                  child: IconButton(
+                    onPressed: () {
+                      ref.read(signOutControllerProvider.notifier).signOut();
+                    },
+                    color: colors.primary,
+                    icon: Icon(
+                      Icons.logout,
+                      size: screenCategory.size >= ScreenSize.large.size
+                          ? iconSizes.micro.onScreenWidth(context)
+                          : iconSizes.mini.onScreenWidth(context),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const Expanded(
+            child: UserListsViewLandscape(),
+          ),
+        ],
       ),
     );
   }
@@ -96,17 +158,59 @@ class UserListsView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final paddings = ref.watch(paddingThemeProvider);
     final chatList = ref.watch(chatListProvider);
-    final size = MediaQuery.of(context).size;
     return chatList.when(
       data: (data) {
         return ListView.builder(
           padding: EdgeInsets.all(
-            size.width * paddings.sm,
+            paddings.sm.onScreenWidth(context),
           ),
           itemCount: data.docs.length,
           itemBuilder: (context, index) {
             final user = data.docs[index];
             return UserCard(
+              username: user['username'],
+              onTap: () {
+                context.pushNamed(AppRoute.chat.name, pathParameters: {
+                  'userId': ref.read(authRepositoryProvider).getUserId()!,
+                  'receiverId': user['uid'],
+                  'receiverUsername': user['username'],
+                });
+              },
+            );
+          },
+        );
+      },
+      error: (error, stackTrace) {
+        return const Center(
+          child: ErrorTextMessage(message: "Error can't load list"),
+        );
+      },
+      loading: () {
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+  }
+}
+
+class UserListsViewLandscape extends ConsumerWidget {
+  const UserListsViewLandscape({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddings = ref.watch(paddingThemeProvider);
+    final chatList = ref.watch(chatListProvider);
+    return chatList.when(
+      data: (data) {
+        return ListView.builder(
+          padding: EdgeInsets.all(
+            paddings.xs.onScreenWidth(context),
+          ),
+          itemCount: data.docs.length,
+          itemBuilder: (context, index) {
+            final user = data.docs[index];
+            return UserCardLandscape(
               username: user['username'],
               onTap: () {
                 context.pushNamed(AppRoute.chat.name, pathParameters: {
@@ -150,7 +254,6 @@ class UserCard extends ConsumerWidget {
     final colors = ref.watch(appColorThemeProvider);
     final iconSizes = ref.watch(appIconSizesProvider);
     final textStyles = ref.watch(textThemeProvider);
-    final size = MediaQuery.of(context).size;
     final screenCategory = getScreenSize(context);
     return GestureDetector(
       onTap: onTap,
@@ -158,8 +261,8 @@ class UserCard extends ConsumerWidget {
         child: Padding(
           padding: EdgeInsets.all(
             screenCategory.size >= ScreenSize.large.size
-                ? size.width * paddings.sm
-                : size.width * paddings.base,
+                ? paddings.sm.onScreenWidth(context)
+                : paddings.base.onScreenWidth(context),
           ),
           child: Row(
             children: [
@@ -167,11 +270,65 @@ class UserCard extends ConsumerWidget {
                 Icons.perm_contact_cal,
                 color: colors.primary,
                 size: screenCategory.size >= ScreenSize.large.size
-                    ? size.width * iconSizes.tiny
-                    : size.width * iconSizes.medium,
+                    ? iconSizes.tiny.onScreenWidth(context)
+                    : iconSizes.medium.onScreenWidth(context),
               ),
               SizedBox(
-                width: size.width * spacing.medium,
+                width: spacing.medium.onScreenWidth(context),
+              ),
+              Text(
+                username,
+                style: textStyles.headline.withColor(
+                  colors.primary,
+                  context,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UserCardLandscape extends ConsumerWidget {
+  const UserCardLandscape({
+    super.key,
+    required this.username,
+    this.onTap,
+  });
+
+  final String username;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final paddings = ref.watch(paddingThemeProvider);
+    final spacing = ref.watch(spacingThemeProvider);
+    final colors = ref.watch(appColorThemeProvider);
+    final iconSizes = ref.watch(appIconSizesProvider);
+    final textStyles = ref.watch(textThemeProvider);
+    final screenCategory = getScreenSize(context);
+    return GestureDetector(
+      onTap: onTap,
+      child: Card(
+        child: Padding(
+          padding: EdgeInsets.all(
+            screenCategory.size >= ScreenSize.large.size
+                ? paddings.xs.onScreenWidth(context)
+                : paddings.sm.onScreenWidth(context),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                Icons.perm_contact_cal,
+                color: colors.primary,
+                size: screenCategory.size >= ScreenSize.large.size
+                    ? iconSizes.mini.onScreenWidth(context)
+                    : iconSizes.small.onScreenWidth(context),
+              ),
+              SizedBox(
+                width: spacing.sm.onScreenWidth(context),
               ),
               Text(
                 username,
@@ -201,8 +358,8 @@ class AddUserButton extends ConsumerWidget {
     final paddings = ref.watch(paddingThemeProvider);
     final iconSizes = ref.watch(appIconSizesProvider);
     final colors = ref.watch(appColorThemeProvider);
-    final size = MediaQuery.of(context).size;
     final screenCategory = getScreenSize(context);
+    final orientation = MediaQuery.of(context).orientation;
     return GestureDetector(
       onTap: onPressed,
       child: Card(
@@ -210,14 +367,18 @@ class AddUserButton extends ConsumerWidget {
         child: Padding(
           padding: EdgeInsets.all(
             screenCategory.size >= ScreenSize.large.size
-                ? size.width * paddings.sm
-                : size.width * paddings.base,
+                ? paddings.sm.onScreenWidth(context)
+                : paddings.base.onScreenWidth(context),
           ),
           child: Icon(
             Icons.add_box_outlined,
-            size: screenCategory.size >= ScreenSize.large.size
-                ? size.width * iconSizes.mini
-                : size.width * iconSizes.tiny,
+            size: orientation == Orientation.portrait
+                ? screenCategory.size >= ScreenSize.large.size
+                    ? iconSizes.mini.onScreenWidth(context)
+                    : iconSizes.tiny.onScreenWidth(context)
+                : screenCategory.size >= ScreenSize.large.size
+                    ? iconSizes.micro.onScreenWidth(context)
+                    : iconSizes.mini.onScreenWidth(context),
             color: colors.onPrimary,
           ),
         ),
